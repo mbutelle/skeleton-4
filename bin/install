@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+
+if [ ! -z "${DEBUG}" ] ; then
+    set -x
+fi
+
+cd "`dirname "$0"`/.."
+
+# Composer
+for i in {1..5}; do
+    composer install -a --no-progress --no-interaction --classmap-authoritative && break
+    test "${i}" -lt 5 && echo "'composer install' failed, retrying..." && sleep 20 || (echo "Aborting..." && exit 1)
+done
+
+#npm
+npm config set loglevel warn
+npm install > "/dev/null" 2>&1
+
+if [ ! -d public/assets ] ; then
+    mkdir public/assets
+fi
+
+gulp font-awesome-fonts
+gulp foundation-style
+gulp js
+gulp img
+gulp default &

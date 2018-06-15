@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Butelle Matthieu - développeur web{% endblock %}</title>
+        <meta name="description" content="Développeur web curieux et passionné.">
+        <meta name="keyword" content="développeur backend symfony php web">
+        <meta name="viewport" content="width=524, user-scalable=no" />
+        <meta name="og:title" content="Butelle Matthieu - développeur web">
+        <meta name="og:type" content="website">
+        <meta name="og:url" content="https://matthieu.butelle.fr">
+        <meta name="og:image" content="https://matthieu.butelle.fr/img/hexagon.png">
+        <meta name="og:description" content="Développeur web curieux et passioné.">
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@MButelle">
+        <meta name="twitter:title" content="Butelle Matthieu - développeur web">
+        <meta name="twitter:description" content="Développeur web curieux et passioné.">
+        <meta name="twitter:image" content="https://matthieu.butelle.fr/img/hexagon.png">
+        <link href="https://fonts.googleapis.com/css?family=Audiowide|Exo+2|Open+Sans|Roboto|Lato|Orbitron" rel="stylesheet">
+        <link href="css/app.min.css" rel="stylesheet"/>
+        <link rel="icon" type="image/png" href="favicon.png"/>
+    </head>
+    <body>
+        <div class="main-container gradient">
+            {% block body %}{% endblock %}
+        </div>
+        <script type="text/javascript" src="js/app.js"></script>
+        {#<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAc7Btag2HKM9I1b0tag7YF5jwivN_S114&callback=initMap" defer></script>#}
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async defer src="https://www.googletagmanager.com/gtag/js?id=UA-117910341-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'UA-117910341-1');
+        </script>
+    </body>
+</html>

@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -e
+
+if [ ! -z "${DEBUG}" ] ; then
+    set -x
+fi
+
+cd "`dirname "$0"`/.."
+
+# Composer
+for i in {1..5}; do
+    composer install -a --no-progress --no-interaction --classmap-authoritative && break
+    test "${i}" -lt 5 && echo "'composer install' failed, retrying..." && sleep 20 || (echo "Aborting..." && exit 1)
+done
+
+#npm
+npm config set loglevel warn
+npm install gulp -g
+npm install > "/dev/null" 2>&1
+
+gulp font-awesome-fonts
+gulp foundation-style
+gulp js
+gulp img
+
+rm -Rf bin/install
+rm -Rf bin/package
+rm -Rf docker
+rm -Rf js
+rm -Rf sass
+rm -Rf node_modules
+rm -Rf .env.dist
+rm -Rf Makefile
+rm -Rf .gitignore
+rm -Rf docker-compose.yml
+rm -Rf .gitlab-ci.yml
+rm -Rf gulpfile.js
+rm -Rf package.json
+rm -Rf package-lock.json
