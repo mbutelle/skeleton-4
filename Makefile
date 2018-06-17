@@ -6,12 +6,12 @@ SHELL = /bin/bash -o pipefail
 #################################
 
 # Global
-PROJECT ?= mb
+PROJECT ?= skeleton
 APP = php
 WEB = web
 DB = db
-DB_NAME = mb
-NETWORK = mb
+DB_NAME = skeleton
+NETWORK = skeleton
 DEBUG = $(debug)
 
 # Aliases
@@ -120,9 +120,9 @@ assets-compile: ## Compile assets
 	@$(RUN) ./node_modules/.bin/encore $(env)
 
 .PHONY: pgsql
-pgsql: ## Run pgsql cli (options: db_name [`mb`])
+pgsql: ## Run pgsql cli (options: db_name [`skeleton`])
 	$(eval db_name ?= $(DB_NAME))
-	@$(COMPOSE) exec $(DB) psql -U mb
+	@$(COMPOSE) exec $(DB) psql -U skeleton
 
 .PHONY: queue-purge
 queue-purge: ## Purge rabbitmq queue (ie. make purge-queue name="registration")
@@ -134,7 +134,7 @@ endif
 
 .PHONY: mailer-test
 mailer-test: ## Send an email
-	@$(RUN) bin/console swiftmailer:email:send --from=from@mb.com --to=to@mb.com --subject=test --body="It's a test !" --no-interaction
+	@$(RUN) bin/console swiftmailer:email:send --from=from@skeleton.com --to=to@skeleton.com --subject=test --body="It's a test !" --no-interaction
 
 .PHONY: migrate
 migrate: ## Run doctrine migrations
