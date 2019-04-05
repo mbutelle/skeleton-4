@@ -15,8 +15,7 @@ for i in {1..5}; do
 done
 
 #npm
-npm config set loglevel warn
-npm install > "/dev/null" 2>&1
+yarn install --silent
 
 if [ ! -d public/assets ] ; then
     mkdir public/assets
