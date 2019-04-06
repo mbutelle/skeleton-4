@@ -21,8 +21,3 @@ if [ ! -d public/assets ] ; then
     mkdir public/assets
 fi
 
-gulp font-awesome-fonts
-gulp foundation-style
-gulp js
-gulp img
-gulp default &
