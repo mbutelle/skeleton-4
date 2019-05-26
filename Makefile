@@ -58,6 +58,12 @@ ready: pretty ## Check if environment is ready
 	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(WEB):80 ddn0/wait 2> /dev/null
 #	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(DB):3306 ddn0/wait 2> /dev/null
 
+.PHONY: mysql
+mysql: ## Run mysql cli (options: db [`default`])
+	$(eval db ?= $(DB))
+	$(eval db_name=$(shell $(COMPOSE) exec $(db) bash -c 'echo $$MYSQL_DATABASE'))
+	@$(COMPOSE) run --rm $(db) mysql $(db_name) -h$(db) -uroot -proot
+
 .PHONY: open
 open: ## Open the browser
 	@xdg-open http://$(WEB).$(NETWORK)/ > /dev/null
