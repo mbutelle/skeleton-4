@@ -49,7 +49,6 @@ up: ## Builds, (re)creates, starts containers
 
 .PHONY: install
 install: ready ## Install application
-#	@$(COMPOSE) exec $(DB) /usr/local/src/init.sh | $(call $(PRINT),INSTALL,$(COLOR_INSTALL))
 	@$(RUN) bin/install | $(call $(PRINT),INSTALL,$(COLOR_INSTALL))
 
 .PHONY: ready
@@ -57,7 +56,7 @@ ready: pretty ## Check if environment is ready
 	@echo "[READY]" | $(call $(PRINT),READY,$(COLOR_READY))
 	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(APP):9000 ddn0/wait 2> /dev/null
 	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(WEB):80 ddn0/wait 2> /dev/null
-#	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(DB):5432 ddn0/wait 2> /dev/null
+#	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(DB):3306 ddn0/wait 2> /dev/null
 
 .PHONY: open
 open: ## Open the browser

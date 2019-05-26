@@ -14,6 +14,13 @@ for i in {1..5}; do
     test "${i}" -lt 5 && echo "'composer install' failed, retrying..." && sleep 20 || (echo "Aborting..." && exit 1)
 done
 
+if grep -Fxq '"name": "doctrine/orm"' composer.lock ; then
+    # create database
+    bin/console doctrine:database:create --if-not-exists
+    bin/console doctrine:migration:migrate --no-interaction
+    bin/console doctrine:fixtures:load --no-interaction
+fi
+
 #npm
 yarn install --silent
 

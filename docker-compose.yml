@@ -40,11 +40,12 @@ services:
             - 80
         depends_on:
             - php
-#
+
 #    db:
-#        image: postgres:9.6
-#        ports:
-#            - "5433:5432"
+#        image: mysql
+#        command: --default-authentication-plugin=mysql_native_password
+#        environment:
+#          - MYSQL_ROOT_PASSWORD=root
 #        networks:
 #            skeleton:
 #                aliases:
