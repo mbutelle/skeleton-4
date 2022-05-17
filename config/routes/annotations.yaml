@@ -1,3 +1,19 @@
-controllers:
-    resource: ../../src/Controller/
+file_system_controllers:
+    resource: ../../src/FileSystem/Infrastructure/Controller/
     type: annotation
+    prefix: /api/file
+    name_prefix: file_system_
+    trailing_slash_on_root: false
+
+picture_controllers:
+    resource: ../../src/Picture/Infrastructure/Controller/
+    type: annotation
+    prefix: /api/picture
+    name_prefix: picture_
+    trailing_slash_on_root: false
+
+gui_controllers:
+    resource: ../../src/Gui/Infrastructure/Controller/
+    type: annotation
+    name_prefix: gui_
+    trailing_slash_on_root: false

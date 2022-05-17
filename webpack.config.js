@@ -1,4 +1,6 @@
 var Encore = require('@symfony/webpack-encore');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+const Autoprefixer = require('autoprefixer');
 
 Encore
     // directory where compiled assets will be stored
@@ -18,8 +20,6 @@ Encore
      * and one CSS file (e.g. app.css) if you JavaScript imports CSS.
      */
     .addEntry('app', './assets/js/app.js')
-    //.addEntry('page1', './assets/js/page1.js')
-    //.addEntry('page2', './assets/js/page2.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -48,10 +48,10 @@ Encore
     })
 
     // enables Sass/SCSS support
-    //.enableSassLoader()
+    .enableSassLoader()
 
     // uncomment if you use TypeScript
-    //.enableTypeScriptLoader()
+    .enableTypeScriptLoader()
 
     // uncomment to get integrity="..." attributes on your script & link tags
     // requires WebpackEncoreBundle 1.4 or higher
@@ -59,10 +59,25 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
-
+    .enableVueLoader(() => {}, { runtimeCompilerBuild: false })
     // uncomment if you use API Platform Admin (composer req api-admin)
     //.enableReactPreset()
     //.addEntry('admin', './assets/js/admin.js')
+
+    .addPlugin(new CopyWebpackPlugin({
+        patterns: [
+            { from: './assets/images', to: 'images' }
+        ],
+        options: {
+            concurrency: 100,
+        },
+    }))
+    .enablePostCssLoader((options) => {
+        options.postcssOptions = {
+            // the directory where the postcss.config.js file is stored
+            path: './'
+        };
+    })
 ;
 
 module.exports = Encore.getWebpackConfig();

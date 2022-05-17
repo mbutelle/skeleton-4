@@ -6,7 +6,7 @@ networks:
 
 services:
     php:
-        image: mbutelle/docker-web-app:0.1
+        image: mbutelle/docker-web-app:php-8
         working_dir: /var/www/app
         networks:
             skeleton:
@@ -20,8 +20,9 @@ services:
             - ~/.composer:/var/www/.composer
             - ~/.npm:/var/www/.npm
             - ~/.yarnrc:/var/www/.yarnrc
-#        depends_on:
-#            - db
+        depends_on:
+            - db
+            - mongo
 
     web:
         image: nginx:1-alpine
@@ -41,17 +42,37 @@ services:
         depends_on:
             - php
 
-#    db:
-#        image: mysql
-#        command: --default-authentication-plugin=mysql_native_password
-#        environment:
-#          - MYSQL_ROOT_PASSWORD=root
-#        networks:
-#            skeleton:
-#                aliases:
-#                    - db
-#            default:
-#                aliases:
-#                    - db.skeleton
-#        volumes:
-#            - ./docker/db:/usr/local/src
+    db:
+        image: mysql
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+          - MYSQL_ROOT_PASSWORD=root
+        networks:
+            skeleton:
+                aliases:
+                    - db
+            default:
+                aliases:
+                    - db.skeleton
+        volumes:
+            - ./docker/db:/usr/local/src
+
+    mongo:
+        image: mongo:latest
+        networks:
+            skeleton:
+                aliases:
+                    - mongo
+            default:
+                aliases:
+                    - mongo.skeleton
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: root
+        ports:
+            - 27017:27017
+        volumes:
+            - mongodb_data_container:/data/db
+
+volumes:
+    mongodb_data_container:

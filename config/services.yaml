@@ -10,6 +10,9 @@ services:
         public: false       # Allows optimizing the container by removing unused services; this also means
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
+        bind:
+            $fileStorage: "@mongo.file_storage"
+            $pictureCollection: "@mongo.collection.pictures"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -17,11 +20,46 @@ services:
         resource: '../src/*'
         exclude: '../src/{Entity,Migrations,Tests,Kernel.php}'
 
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller'
-        tags: ['controller.service_arguments']
+    _instanceof:
+        App\Shared\Application\Command\CommandHandlerInterface:
+            tags:
+                - {name: 'messenger.message_handler', bus: 'command.bus'}
+        App\Shared\Application\Query\QueryHandlerInterface:
+            tags:
+                - {name: 'messenger.message_handler', bus: 'query.bus'}
+        App\Shared\Application\Event\EventHandlerInterface:
+            tags:
+                - {name: 'messenger.message_handler', bus: 'event.bus'}
+        App\Shared\Infrastructure\Message\MessageHandlerInterface:
+            tags:
+                - {name: 'messenger.message_handler', bus: 'message.bus'}
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    mongo.file_storage:
+        class: MongoDB\GridFS\Bucket
+        factory: ["@MongoDB\\Database", "selectGridFSBucket"]
+
+    MongoDB\Client:
+        arguments: [ "%env(resolve:MONGO_URI)%" ]
+
+    MongoDB\Database:
+        factory: [ "@MongoDB\\Client", "selectDatabase" ]
+        arguments:
+            - '%env(resolve:MONGO_DATABASE)%'
+
+    mongo.collection.pictures:
+        class: MongoDB\Collection
+        factory: [ "@MongoDB\\Database", "selectCollection" ]
+        arguments:
+            - pictures
+
+    App\FileSystem\Infrastructure\Controller\:
+        resource: '../src/FileSystem/Infrastructure/Controller'
+        tags: [ 'controller.service_arguments' ]
+
+    App\Gui\Infrastructure\Controller\:
+        resource: '../src/Gui/Infrastructure/Controller'
+        tags: [ 'controller.service_arguments' ]
+
+    App\Picture\Infrastructure\Controller\:
+        resource: '../src/Picture/Infrastructure/Controller'
+        tags: [ 'controller.service_arguments' ]

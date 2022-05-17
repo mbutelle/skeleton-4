@@ -10,6 +10,7 @@ PROJECT ?= skeleton
 APP = php
 WEB = web
 DB = db
+MONGO = mongo
 DB_NAME = skeleton
 NETWORK = skeleton
 DEBUG = $(debug)
@@ -56,7 +57,8 @@ ready: pretty ## Check if environment is ready
 	@echo "[READY]" | $(call $(PRINT),READY,$(COLOR_READY))
 	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(APP):9000 ddn0/wait 2> /dev/null
 	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(WEB):80 ddn0/wait 2> /dev/null
-#	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(DB):3306 ddn0/wait 2> /dev/null
+	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(DB):3306 ddn0/wait 2> /dev/null
+	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(MONGO):27017 ddn0/wait 2> /dev/null
 
 .PHONY: mysql
 mysql: ## Run mysql cli (options: db [`default`])
@@ -208,6 +210,10 @@ else
 	$(eval PRINT = PRINT_PRETTY_NO_COLORS)
 endif
 	@true
+
+.PHONY: watch
+watch:
+	@${RUN} yarn run encore dev --watch
 
 .PHONY: help
 help:
