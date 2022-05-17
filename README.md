@@ -39,6 +39,15 @@ To start the environment :
 make start
 ```
 
+#### compile vuejs file
+
+To compile vuejs file and watch them :
+
+```shell
+make watch
+```
+
+
 #### Go to homepage
 
 To going to the hompeage :
