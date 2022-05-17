@@ -2,11 +2,14 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Mbut skeleton{% endblock %}</title>
-        <meta name="viewport" content="width=524, user-scalable=no" />
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
+        {{ encore_entry_link_tags('app') }}
     </head>
     <body>
-        <div class="main-container gradient">
+        <div>
             {% block body %}{% endblock %}
         </div>
+    </body>
+    {{ encore_entry_script_tags('app') }}
 </html>

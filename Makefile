@@ -6,12 +6,13 @@ SHELL = /bin/bash -o pipefail
 #################################
 
 # Global
-PROJECT ?= skeleton
+PROJECT ?= vegetables
 APP = php
 WEB = web
 DB = db
-DB_NAME = skeleton
-NETWORK = skeleton
+MONGO = mongo
+DB_NAME = vegetables
+NETWORK = vegetables
 DEBUG = $(debug)
 
 # Aliases
@@ -56,7 +57,7 @@ ready: pretty ## Check if environment is ready
 	@echo "[READY]" | $(call $(PRINT),READY,$(COLOR_READY))
 	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(APP):9000 ddn0/wait 2> /dev/null
 	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(WEB):80 ddn0/wait 2> /dev/null
-#	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(DB):3306 ddn0/wait 2> /dev/null
+	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(MONGO):27017 ddn0/wait 2> /dev/null
 
 .PHONY: mysql
 mysql: ## Run mysql cli (options: db [`default`])
@@ -125,9 +126,9 @@ assets-compile: ## Compile assets
 	@$(RUN) ./node_modules/.bin/encore $(env)
 
 .PHONY: pgsql
-pgsql: ## Run pgsql cli (options: db_name [`skeleton`])
+pgsql: ## Run pgsql cli (options: db_name [`vegetables`])
 	$(eval db_name ?= $(DB_NAME))
-	@$(COMPOSE) exec $(DB) psql -U skeleton
+	@$(COMPOSE) exec $(DB) psql -U vegetables
 
 .PHONY: queue-purge
 queue-purge: ## Purge rabbitmq queue (ie. make purge-queue name="registration")
@@ -139,7 +140,7 @@ endif
 
 .PHONY: mailer-test
 mailer-test: ## Send an email
-	@$(RUN) bin/console swiftmailer:email:send --from=from@skeleton.com --to=to@skeleton.com --subject=test --body="It's a test !" --no-interaction
+	@$(RUN) bin/console swiftmailer:email:send --from=from@vegetables.com --to=to@vegetables.com --subject=test --body="It's a test !" --no-interaction
 
 .PHONY: migrate
 migrate: ## Run doctrine migrations
@@ -208,6 +209,10 @@ else
 	$(eval PRINT = PRINT_PRETTY_NO_COLORS)
 endif
 	@true
+
+.PHONY: watch
+watch:
+	@${RUN} yarn run encore dev --watch
 
 .PHONY: help
 help:

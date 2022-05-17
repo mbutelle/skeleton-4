@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connectez-vous!{% endblock %}
+
+{% block body %}
+    <div class="flex justify-content-center flex-column align-items-center" style="width: 100%; height: 100%;">
+        <div class="form">
+            <form method="post">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                <h1 class="h3 mb-3 font-weight-normal">Connectez-vous</h1>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label for="inputUsername" class="sr-only">Nom utilisateur</label>
+                            <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="Nom utilisateur" required autofocus>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label for="inputPassword" class="sr-only">Mot de passe</label>
+                            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <div id="forget_password"></div>
+                    </div>
+                </div>
+
+                <input type="hidden" name="_csrf_token"
+                       value="{{ csrf_token('authenticate') }}"
+                >
+
+                <div class="form-row flex flex-justify-flex-end">
+                    <div class="form-field">
+                        <div class="form-group">
+                            <button class="btn btn-lg btn-primary pull-right" type="submit">Connexion</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
